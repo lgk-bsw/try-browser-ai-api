@@ -11,7 +11,10 @@ import TranslatorDemo from "../components/TranslatorDemo"
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
-        <link rel="stylesheet" href="/inter/web/inter.css" />
+        <link
+            rel="stylesheet"
+            href={`${import.meta.env.BASE_URL}/inter/web/inter.css`}
+        />
         <title>Try Browser AI APIs</title>
     </head>
     <body>
