@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useDebouncedCallback } from "../shared"
+import { useState, useEffect } from "react"
+import { useDebouncedCallback, isChrome } from "../shared"
 
 const languageOptions = ["en", "de", "fr"]
 
@@ -10,6 +10,13 @@ export default function TranslatorDemo() {
     const [outputLanguage, setOutputLanguage] = useState("de")
     const [isTranslating, setIsTranslating] = useState(false)
     const [modelDownloadProcess, setModelDownloadProcess] = useState(100)
+    const [showChromeWarning, setShowChromeWarning] = useState(false)
+
+    useEffect(() => {
+        if (!isChrome()) {
+            setShowChromeWarning(true)
+        }
+    }, [])
 
     const debouncedTranslate = useDebouncedCallback((value: string) => {
         doTranslate(value)
@@ -64,6 +71,14 @@ export default function TranslatorDemo() {
         <>
             <h2 className="mt-4 mb-3">Translator</h2>
 
+            {showChromeWarning && (
+                <div className="alert alert-warning mb-3" role="alert">
+                    <strong>Achtung:</strong> Diese Funktion funktioniert nur in
+                    Google Chrome. Du verwendest derzeit einen anderen Browser.
+                    Bitte lade Google Chrome herunter, um die AI-APIs zu nutzen.
+                </div>
+            )}
+
             <p>
                 The Language Detector and Translator APIs work on desktop only
                 in Chrome.
@@ -103,13 +118,14 @@ export default function TranslatorDemo() {
                                     doTranslate(input, option)
                                 }}
                                 role="checkbox"
+                                disabled={showChromeWarning}
                             >
                                 {option}
                             </button>
                         ))}
                     </div>
 
-                    <div className="form-floating">
+                    <div className="form-floating mb-3">
                         <textarea
                             className="form-control"
                             placeholder="Enter your text here"
@@ -117,6 +133,7 @@ export default function TranslatorDemo() {
                             style={{ height: "100px" }}
                             onChange={handleInputChange}
                             value={input}
+                            disabled={showChromeWarning}
                         ></textarea>
                         <label htmlFor="translateInput">
                             Enter your text here
@@ -138,6 +155,7 @@ export default function TranslatorDemo() {
                                     doTranslate(input, undefined, option)
                                 }}
                                 role="checkbox"
+                                disabled={showChromeWarning}
                             >
                                 {option}
                             </button>
